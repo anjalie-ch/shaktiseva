@@ -1,149 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Image Map</title>
-    <style>
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            overflow: hidden;
-        }
-        .image-container {
-            position: relative;
-            display: inline-block;
-            width: 30%;
-            min-width:200px;
-        }
-        img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        .tooltip {
-            position: absolute;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 5px;
-            font-size: 14px;
-            width: 170px; /* Fixed width */
-            text-align: center; /* Center the text inside */
-            white-space: normal; /* Allow text wrapping */
-            word-wrap: break-word; /* Ensure long words break properly */
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dynamic Image Map</title>
+        <style>
+            body {
+                text-align: center;
+                font-family: Arial, sans-serif;
+                overflow: hidden;
+            }
+            .image-container {
+                position: relative;
+                display: inline-block;
+                width: 30%;
+                min-width:200px;
+            }
+            img {
+                width: 100%;
+                height: auto;
+                display: block;
+            }
+            .tooltip {
+                position: absolute;
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 8px 12px;
+                border-radius: 5px;
+                font-size: 14px;
+                width: 170px; /* Fixed width */
+                text-align: center; /* Center the text inside */
+                white-space: normal; /* Allow text wrapping */
+                word-wrap: break-word; /* Ensure long words break properly */
+                
+                opacity: 0; /* Start hidden */
+                visibility: hidden; /* Prevent interactions */
+                
+                pointer-events: none;
+                transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="image-container">
+            <img src="Clementine to Saffron.png" usemap="#image-map" id="mainImage">
+            <map name="image-map" id="imageMap"></map>
+        </div>
+        
+        <p>scroll over logo for breakdown of its components</p>
             
-            opacity: 0; /* Start hidden */
-            visibility: hidden; /* Prevent interactions */
-            
-            pointer-events: none;
-            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-        }
-    </style>
-</head>
-<body>
-
-<div class="image-container">
-    <img src="Clementine to Saffron.png" usemap="#image-map" id="mainImage">
-    <p>scroll over logo for breakdown of its components</p>
-    <map name="image-map" id="imageMap"></map>
-</div>
-
-<!-- Custom Tooltip -->
-<div id="tooltip" class="tooltip"></div>
-
-<script>
-    // Original image dimensions
-    const origWidth = 10000;
-    const origHeight = 10000;
-
-    // Store all areas (original coordinates)
-    const areasData = [
-        {
-            alt: "om", title: "om", href: "#",
-            coords: "3274,5683,3345,6037,3407,6213,3592,6567,3796,6867,4246,7150,4670,7256,5032,7123,5359,6849,5448,6858,5624,6832,5695,6973,5810,6938,5774,6796,5801,6708,5889,6664,5995,6655,6101,6628,6137,6549,6216,6461,6331,6487,6402,6531,6534,6478,6605,6372,6711,6231,6808,5984,6843,5621,6737,5003,6472,4482,6048,4164,6101,3572,5730,3192,4979,2962,4335,3386,3972,4022,3584,4217,3327,4517",
-            shape: "poly",
-            description:"'Om' is a symbol representing a sacred sound/invocation that encapsulates the essence of the supreme consciousness, 'Atman.'"
-        },
-        {
-            alt: "trishul", title: "trishul", href: "#",
-            coords: "4988,118,4016,471,3937,2971,4988,2927,5978,2945,5951,409",
-            shape: "poly",
-            description:"The 'trishul' (trident) held by Goddess Durga represents her divine power to create, preserve, and destroy, with each prong signifying one of these aspects."
-        },
-        {
-            alt: "veena", title: "veena", href: "#",
-            coords: "4670,7494,3963,7521,3504,7680,3204,7909,2930,8307,2850,8881,3001,9164,3327,9517,3840,9791,4122,9765,4582,9650,4891,9402,5024,9120,5085,8740,5130,8227,5236,7998,5324,7892,6154,7397,7329,6708,7276,6805,7223,7061,7232,7220,7329,7362,7479,7538,7727,7609,8018,7609,8274,7521,8601,7185,8672,6690,8433,6399,7939,6319,8168,6160,8283,6249,8486,6302,8557,6054,8681,5878,8866,5895,9069,5860,9246,5984,9458,6045,9732,5913,9820,5613,9759,5321,9564,5065,9246,4862,8981,4862,8663,5003,8098,5498,6737,6222,6561,6496,6357,6522,6225,6478,5501,6876,5130,7061,4803,7238",
-            shape: "poly",
-            description:"The'veena' held by Goddess Saraswathi represents her divine power to produce harmonious and divine knowledge through music and learning."
-        },
-        {
-            alt: "lotus1", title: "lotus1", href: "#",
-            coords: "2895,9058,2806,8581,2939,8192,3195,7883,3619,7556,4016,7459,4502,7468,4653,7468,4723,7309,4308,7194,3813,6929,3398,6249,2073,6363,1711,6920,1384,7521,942,8687,1578,9190,2974,9252",
-            shape: "poly",
-            description:"The lotus flower associated with Goddess Lakshmi grows in muddy waters but remains clean and untouched by the dirt, representing purity and prosperity."
-        },
-        {
-            alt: "lotus2", title: "lotus2", href: "#",
-            coords: "5015,9252,5094,8775,5191,8192,5324,7901,6799,7053,6746,7379,6622,7697,7250,7344,7453,7556,7797,7636,8089,7609,8274,7556,8548,7468,9052,8704,8769,9058,7939,9305,6879,9367,6419,9676,5845,9782,5289,9579",
-            shape: "poly",
-            description:"The lotus flower associated with Goddess Lakshmi grows in muddy waters but remains clean and untouched by the dirt, representing purity and prosperity."
-        }
-    ];
-
-    function scaleCoordinates(originalCoords, imgWidth, imgHeight) {
-        return originalCoords.split(',').map((coord, index) => 
-            index % 2 === 0 
-                ? Math.round((parseInt(coord) / origWidth) * imgWidth)  // Scale X coordinate
-                : Math.round((parseInt(coord) / origHeight) * imgHeight) // Scale Y coordinate
-        ).join(',');
-    }
-
-    function updateImageMap() {
-        const img = document.getElementById("mainImage");
-        const map = document.getElementById("imageMap");
-        const tooltip = document.getElementById("tooltip");
-
-        // Get current image size
-        const imgWidth = img.clientWidth;
-        const imgHeight = img.clientHeight;
-
-        // Clear existing areas
-        map.innerHTML = "";
-
-        // Create new <area> elements with scaled coordinates
-        areasData.forEach(area => {
-            const newArea = document.createElement("area");
-            newArea.alt = area.alt;
-            newArea.shape = area.shape;
-            newArea.coords = scaleCoordinates(area.coords, imgWidth, imgHeight);
-            
-            // Custom tooltip logic
-            newArea.addEventListener("mouseenter", (event) => {
-                tooltip.textContent = area.description;
-                tooltip.style.opacity = "1";  // Fade in
-                tooltip.style.visibility = "visible";
-
-            });
-
-            newArea.addEventListener("mousemove", (event) => {
-                tooltip.style.left = event.pageX + 10 + "px";
-                tooltip.style.top = event.pageY + 10 + "px";
-            });
-
-            newArea.addEventListener("mouseleave", () => {
-                tooltip.style.opacity = "0";  // Fade out
-                tooltip.style.visibility = "hidden";
-            });
-            
-            map.appendChild(newArea);
-        });
-    }
-
-    // Run when page loads and on window resize
-    window.onload = updateImageMap;
-    window.onresize = updateImageMap;
-</script>
-
-</body>
+        <!-- Custom Tooltip -->
+        <div id="tooltip" class="tooltip"></div>
+        
+        <script>
+            // Original image dimensions
+            const origWidth = 10000;
+            const origHeight = 10000;
+        
+            // Store all areas (original coordinates)
+            const areasData = [
+                {
+                    alt: "om", title: "om", href: "#",
+                    coords: "3274,5683,3345,6037,3407,6213,3592,6567,3796,6867,4246,7150,4670,7256,5032,7123,5359,6849,5448,6858,5624,6832,5695,6973,5810,6938,5774,6796,5801,6708,5889,6664,5995,6655,6101,6628,6137,6549,6216,6461,6331,6487,6402,6531,6534,6478,6605,6372,6711,6231,6808,5984,6843,5621,6737,5003,6472,4482,6048,4164,6101,3572,5730,3192,4979,2962,4335,3386,3972,4022,3584,4217,3327,4517",
+                    shape: "poly",
+                    description:"'Om' is a symbol representing a sacred sound/invocation that encapsulates the essence of the supreme consciousness, 'Atman.'"
+                },
+                {
+                    alt: "trishul", title: "trishul", href: "#",
+                    coords: "4988,118,4016,471,3937,2971,4988,2927,5978,2945,5951,409",
+                    shape: "poly",
+                    description:"The 'trishul' (trident) held by Goddess Durga represents her divine power to create, preserve, and destroy, with each prong signifying one of these aspects."
+                },
+                {
+                    alt: "veena", title: "veena", href: "#",
+                    coords: "4670,7494,3963,7521,3504,7680,3204,7909,2930,8307,2850,8881,3001,9164,3327,9517,3840,9791,4122,9765,4582,9650,4891,9402,5024,9120,5085,8740,5130,8227,5236,7998,5324,7892,6154,7397,7329,6708,7276,6805,7223,7061,7232,7220,7329,7362,7479,7538,7727,7609,8018,7609,8274,7521,8601,7185,8672,6690,8433,6399,7939,6319,8168,6160,8283,6249,8486,6302,8557,6054,8681,5878,8866,5895,9069,5860,9246,5984,9458,6045,9732,5913,9820,5613,9759,5321,9564,5065,9246,4862,8981,4862,8663,5003,8098,5498,6737,6222,6561,6496,6357,6522,6225,6478,5501,6876,5130,7061,4803,7238",
+                    shape: "poly",
+                    description:"The'veena' held by Goddess Saraswathi represents her divine power to produce harmonious and divine knowledge through music and learning."
+                },
+                {
+                    alt: "lotus1", title: "lotus1", href: "#",
+                    coords: "2895,9058,2806,8581,2939,8192,3195,7883,3619,7556,4016,7459,4502,7468,4653,7468,4723,7309,4308,7194,3813,6929,3398,6249,2073,6363,1711,6920,1384,7521,942,8687,1578,9190,2974,9252",
+                    shape: "poly",
+                    description:"The lotus flower associated with Goddess Lakshmi grows in muddy waters but remains clean and untouched by the dirt, representing purity and prosperity."
+                },
+                {
+                    alt: "lotus2", title: "lotus2", href: "#",
+                    coords: "5015,9252,5094,8775,5191,8192,5324,7901,6799,7053,6746,7379,6622,7697,7250,7344,7453,7556,7797,7636,8089,7609,8274,7556,8548,7468,9052,8704,8769,9058,7939,9305,6879,9367,6419,9676,5845,9782,5289,9579",
+                    shape: "poly",
+                    description:"The lotus flower associated with Goddess Lakshmi grows in muddy waters but remains clean and untouched by the dirt, representing purity and prosperity."
+                }
+            ];
+        
+            function scaleCoordinates(originalCoords, imgWidth, imgHeight) {
+                return originalCoords.split(',').map((coord, index) => 
+                    index % 2 === 0 
+                        ? Math.round((parseInt(coord) / origWidth) * imgWidth)  // Scale X coordinate
+                        : Math.round((parseInt(coord) / origHeight) * imgHeight) // Scale Y coordinate
+                ).join(',');
+            }
+        
+            function updateImageMap() {
+                const img = document.getElementById("mainImage");
+                const map = document.getElementById("imageMap");
+                const tooltip = document.getElementById("tooltip");
+        
+                // Get current image size
+                const imgWidth = img.clientWidth;
+                const imgHeight = img.clientHeight;
+        
+                // Clear existing areas
+                map.innerHTML = "";
+        
+                // Create new <area> elements with scaled coordinates
+                areasData.forEach(area => {
+                    const newArea = document.createElement("area");
+                    newArea.alt = area.alt;
+                    newArea.shape = area.shape;
+                    newArea.coords = scaleCoordinates(area.coords, imgWidth, imgHeight);
+                    
+                    // Custom tooltip logic
+                    newArea.addEventListener("mouseenter", (event) => {
+                        tooltip.textContent = area.description;
+                        tooltip.style.opacity = "1";  // Fade in
+                        tooltip.style.visibility = "visible";
+        
+                    });
+        
+                    newArea.addEventListener("mousemove", (event) => {
+                        tooltip.style.left = event.pageX + 10 + "px";
+                        tooltip.style.top = event.pageY + 10 + "px";
+                    });
+        
+                    newArea.addEventListener("mouseleave", () => {
+                        tooltip.style.opacity = "0";  // Fade out
+                        tooltip.style.visibility = "hidden";
+                    });
+                    
+                    map.appendChild(newArea);
+                });
+            }
+        
+            // Run when page loads and on window resize
+            window.onload = updateImageMap;
+            window.onresize = updateImageMap;
+        </script>
+    </body>
 </html>
