@@ -33,48 +33,43 @@
 <body>
 
 <div class="image-container">
-    <img src="Clementine to Saffron.png" id="mainImage" alt="SS Logo">
+    <img src="Clementine to Saffron.png" usemap="#image-map" id="mainImage" alt="SS Logo">
     <div class="hover-box" id="hoverBox"></div>
 </div>
 
+<map name="image-map">
+    <area target="" alt="om" title="om" href="#" coords="3274,5683,3345,6037,3407,6213,3592,6567,3796,6867,4246,7150,4670,7256,5032,7123,5359,6849" shape="poly" data-center="4500,7000">
+    <area target="" alt="trishul" title="trishul" href="#" coords="4988,118,4016,471,3937,2971,4988,2927,5978,2945,5951,409" shape="poly" data-center="5000,2000">
+    <area target="" alt="veena" title="veena" href="#" coords="4670,7494,3963,7521,3504,7680,3204,7909,2930,8307,2850,8881" shape="poly" data-center="4000,8000">
+</map>
+
 <script>
-    const image = document.getElementById("mainImage");
-    const hoverBox = document.getElementById("hoverBox");
-
-    // Define the hoverable areas as {name, x, y, width, height}
-    const hoverAreas = [
-        { name: "om", x: 500, y: 300, width: 80, height: 80 },
-        { name: "trishul", x: 700, y: 200, width: 100, height: 100 },
-        { name: "veena", x: 900, y: 400, width: 90, height: 90 },
-        { name: "lotus1", x: 1100, y: 500, width: 80, height: 80 },
-        { name: "lotus2", x: 1300, y: 600, width: 85, height: 85 }
-    ];
-
-    image.addEventListener("mousemove", (event) => {
-        const rect = image.getBoundingClientRect();
-        const scaleX = image.naturalWidth / rect.width;
-        const scaleY = image.naturalHeight / rect.height;
-
-        const mouseX = (event.clientX - rect.left) * scaleX;
-        const mouseY = (event.clientY - rect.top) * scaleY;
-
-        let inArea = false;
-
-        hoverAreas.forEach(area => {
-            if (
-                mouseX >= area.x && mouseX <= area.x + area.width &&
-                mouseY >= area.y && mouseY <= area.y + area.height
-            ) {
-                hoverBox.style.left = `${event.clientX}px`;
-                hoverBox.style.top = `${event.clientY}px`;
+    document.addEventListener("DOMContentLoaded", function() {
+        const hoverBox = document.getElementById("hoverBox");
+        const image = document.getElementById("mainImage");
+        const areas = document.querySelectorAll("area");
+        
+        areas.forEach(area => {
+            area.addEventListener("mouseenter", function() {
+                const coords = this.getAttribute("data-center").split(",");
+                const x = parseInt(coords[0]);
+                const y = parseInt(coords[1]);
+                
+                const rect = image.getBoundingClientRect();
+                const imgWidth = image.naturalWidth;
+                const imgHeight = image.naturalHeight;
+                const scaleX = rect.width / imgWidth;
+                const scaleY = rect.height / imgHeight;
+                
+                hoverBox.style.left = `${rect.left + x * scaleX - 50}px`;
+                hoverBox.style.top = `${rect.top + y * scaleY - 50}px`;
                 hoverBox.style.display = "block";
-                inArea = true;
-            }
-        });
+            });
 
-        if (!inArea) {
-            hoverBox.style.display = "none";
-        }
+            area.addEventListener("mouseleave", function() {
+                hoverBox.style.display = "none";
+            });
+        });
     });
 </script>
 
