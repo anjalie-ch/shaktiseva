@@ -127,8 +127,12 @@
                     });
         
                     newArea.addEventListener("mousemove", (event) => {
+                        const offsetX = 20;  // Move tooltip ahead of cursor
+                        const offsetY = 10;  // Move tooltip slightly below
+
                         tooltip.style.left = event.pageX - 85 + "px";
                         tooltip.style.top = event.pageY + 20 + "px";
+                        
                     });
         
                     newArea.addEventListener("mouseleave", () => {
